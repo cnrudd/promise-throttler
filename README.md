@@ -1,8 +1,11 @@
-Promise Throttle &nbsp; [![Build Status](https://api.travis-ci.org/JMPerez/promise-throttle.svg)](https://travis-ci.org/JMPerez/promise-throttle/) [![Coverage Status](https://coveralls.io/repos/github/JMPerez/promise-throttle/badge.svg?branch=master)](https://coveralls.io/r/JMPerez/promise-throttle?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/JMPerez/promise-throttle.svg)](https://greenkeeper.io/)
+Promise Throttle 
 ==================
 
 
-This is a small library to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
+This is a small library adapted from (https://github.com/JMPerez/promise-throttle) [JMPerez/promise-throttle] to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
+
+This version differs from JMPerez/promise-throttle in that it will run all promises allowed within a unit of time without delay, and then will wait for all promises to be resolved and for the unit of time to have expired, before starting the next batch of promises.
+This eliminates the risk of latency in network requests causing your well behaved throttled calls to still get dinged for rate limit abuse due to latent calls piling up on the endpoint.
 
 It doesn't have any dependencies. If you are running this on Node.js, you will need to pass whatever Promise library you are using in the constructor.
 
@@ -63,16 +66,6 @@ If you are using it in a browser, you can use bower: `bower install promise-thro
 
 Install the dependencies using `npm install`.
 Run `npm start` to lint, test and browserify promise-thottle.
-
-## Projects using it
-
-See how some projects are using it:
-
-- [ivasilov/promised-twitter](https://github.com/ivasilov/promised-twitter)
-- [JMPerez/spotify-dedup](https://github.com/JMPerez/spotify-dedup)
-- [johannesss/randify](https://github.com/johannesss/randify)
-- [JoseBarrios/mturk-api](https://github.com/JoseBarrios/mturk-api)
-- [zackiles/lucy-bot](https://github.com/zackiles/lucy-bot)
 
 ## License
 

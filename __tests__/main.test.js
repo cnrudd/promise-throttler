@@ -178,7 +178,7 @@ describe('PromiseThrottle', function() {
 
       setTimeout(function() {
         resolved.push(resolvedCount);
-        assert.deepEqual([2, 4, 6, 8], resolved);
+        assert.deepEqual(resolved, [2, 4, 6, 8]);
         done();
       }, 3700);
     });
