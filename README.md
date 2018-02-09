@@ -2,7 +2,7 @@ Promise Throttle
 ==================
 
 
-This is a small library adapted from (https://github.com/JMPerez/promise-throttle) [JMPerez/promise-throttle] to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
+This is a small library adapted from (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
 This version differs from JMPerez/promise-throttle in that it will run all promises allowed within a unit of time without delay, and then will wait for all promises to be resolved and for the unit of time to have expired, before starting the next batch of promises.
 This eliminates the risk of latency in network requests causing your well behaved throttled calls to still get dinged for rate limit abuse due to latent calls piling up on the endpoint.

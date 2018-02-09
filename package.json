@@ -29,6 +29,7 @@
     "eslint": "^4.7.1",
     "jest-cli": "^22.0.0",
     "promise": "^8.0.0",
-    "sinon": "^4.0.0"
+    "sinon": "^4.0.0",
+    "browserify": "^16.0.0"
   }
 }
