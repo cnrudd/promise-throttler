@@ -146,7 +146,7 @@ describe('PromiseThrottle', function() {
         .catch(done.fail);
     });
 
-    it('should throttle properly the function calls, respecting the number of "requestsPerSecond" option', function(done) {
+    it('respect-the-requestsPerSecond-option', function(done) {
       var pt2 = createPromiseThrottle(2);
 
       var count = 8,

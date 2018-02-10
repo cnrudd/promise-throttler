@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+      "name": "TESTS: Promise throttle: All",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "args": ["--runInBand"],
+      "program": "${workspaceRoot}/node_modules/.bin/jest"
+    },
+    {
+      "name": "TESTS: Promise throttle: Respects requestsPerSecond value",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "args": ["--testNamePattern=respect-the-requestsPerSecond-option"],
+      "program": "${workspaceRoot}/node_modules/.bin/jest"
+    }
+    ]
+}
