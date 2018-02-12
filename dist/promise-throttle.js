@@ -15,10 +15,10 @@ window.PromiseThrottle = require('./main');
  *        @param {number} requestsPerSecond The amount of requests per second
  *                                          the library will limit to
  */
-function PromiseThrottle(options) {
+function PromiseThrottle (options) {
   this.requestsPerSecond = options.requestsPerSecond;
   this.promiseImplementation = options.promiseImplementation || Promise;
-
+  this.delay = Math.floor(1000 / this.requestsPerSecond);
   this.queued = [];
   this.promisesFired = 0;
   this.promisesResolved = 0;
@@ -60,38 +60,15 @@ PromiseThrottle.prototype.addAll = function (promises) {
  * @return {void}
  */
 PromiseThrottle.prototype.dequeue = function () {
-  if (this.queued.length > 0) {
-
-    if (this.promisesFired === this.requestsPerSecond) {
-      if (this.promisesResolved === this.promisesFired &&
-        new Date() - this.cycleStartTime > 1000
-      ) {
-        this.promisesFired = 0;
-        this.promisesResolved = 0;
-      } else {
-        setTimeout(function () {
-          this.dequeue();
-        }.bind(this), 100);
-        return;
-      }
-    }
-
-    if (this.promisesFired === 0) {
-      this.cycleStartTime = new Date();
-    }
-
-    if (this.requestsPerSecond > this.promisesFired) {
-      this.promisesFired++;
-      this._execute();
-    } else {
-      // we have reached the limit, schedule a dequeue operation
-      var timer = Math.max(0, 1000 - (new Date() - this.cycleStartTime));
-      setTimeout(function () {
-        this.dequeue();
-      }.bind(this),
-        timer);
-    }
+  if (
+    this.queued.length === 0 || 
+    this.promisesFired !== this.promisesResolved
+  ) {
+    return;
   }
+
+  this.promisesFired++;
+  this._execute();
 };
 
 /**
@@ -102,13 +79,29 @@ PromiseThrottle.prototype.dequeue = function () {
 PromiseThrottle.prototype._execute = function () {
   var self = this;
   var candidate = self.queued.shift();
-  candidate.promise().then(function (r) {
-    self.promisesResolved++;
-    candidate.resolve(r);
-  }).catch(function (r) {
-    self.promisesResolved++;
-    candidate.reject(r);
-  });
+  if (!candidate) {
+    return;
+  }
+
+  candidate.promise()
+    .then(function (r) {
+      candidate.resolve(r);
+      self._setupNextDequeue();
+    })
+    .catch(function (r) {
+      candidate.reject(r);
+      self._setupNextDequeue();
+    });
+};
+
+PromiseThrottle.prototype._setupNextDequeue = function () {
+  var self = this;
+  self.promisesResolved++;
+
+  setTimeout(function () {
+    self.dequeue();
+  }.bind(self),
+  self.delay);
 };
 
 module.exports = PromiseThrottle;
