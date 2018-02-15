@@ -1,14 +1,14 @@
 {
-  "name": "promise-throttle",
-  "version": "0.3.1",
-  "homepage": "https://github.com/jmperez/promise-throttle",
+  "name": "promise-throttler",
+  "version": "1.0.0",
+  "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
   "main": "lib/main.js",
-  "author": "Jose M. Perez",
+  "author": "Colin Rudd",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jmperez/promise-throttle.git"
+    "url": "https://github.com/cnrudd/promise-throttler.git"
   },
   "scripts": {
     "start": "npm run dist",
