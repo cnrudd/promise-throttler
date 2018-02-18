@@ -22,6 +22,7 @@ function PromiseThrottle (options) {
   this.queued = [];
   this.promisesFired = 0;
   this.promisesResolved = 0;
+  this.cycleStartTime = 0;
 }
 
 /**
@@ -60,15 +61,33 @@ PromiseThrottle.prototype.addAll = function (promises) {
  * @return {void}
  */
 PromiseThrottle.prototype.dequeue = function () {
+  var self = this;
   if (
-    this.queued.length === 0 || 
-    this.promisesFired !== this.promisesResolved
+    self.queued.length === 0 || 
+    self.promisesFired !== self.promisesResolved
   ) {
     return;
   }
 
-  this.promisesFired++;
-  this._execute();
+  var delay = 0;
+  if (self.promisesFired === self.requestsPerSecond) {
+    delay = Math.max(0, 1000 - (new Date() - self.cycleStartTime));
+    self.promisesFired = 0;
+    self.promisesResolved = 0;
+  }
+  if (self.promisesFired === 0) {
+    self.cycleStartTime = new Date();
+  }
+
+  if (delay === 0) {
+    self.promisesFired++;
+    self._execute();
+    return;
+  }
+ 
+  setTimeout(function () {
+    self.dequeue();
+  }.bind(self), delay);
 };
 
 /**
