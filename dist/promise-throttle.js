@@ -79,7 +79,7 @@ PromiseThrottle.prototype.dequeue = function () {
 PromiseThrottle.prototype._execute = function () {
   var self = this;
   var candidate = self.queued.shift();
-  console.log(new Date())
+
   self.executing = true;
   candidate.promise()
     .then(function (r) {
