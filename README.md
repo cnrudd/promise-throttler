@@ -8,8 +8,11 @@ This is a small library adapted from (https://github.com/JMPerez/promise-throttl
 This version differs from JMPerez/promise-throttle in that it will run promises only N time after the previous one has been resolved.  N time is 1 second / requests per second.
 
 This approach reduces the risk that your calls are blocked for rate limit abuse due to latent calls piling up on the endpoint.
+If the rate limit is 3 requests per second, you may end up making only 2 1/2 requests per second, but you are virtually guaranteed to not get dinged for exceeding the rate limit.
 
-It doesn't have any dependencies. If you are running this on Node.js, you will need to pass whatever Promise library you are using in the constructor.
+A queue is created, into which promises from any source in your code can be added.  So, unrelated processes that use the same API endpoint don't have to worry about the other processes causing rate limits to be reached.
+
+This library has no dependencies. If you are running this on Node.js, you will need to pass whatever Promise library you are using in the constructor.
 
 Then, you add functions to the `PromiseThrottle` that, once called, return a `Promise`.
 
