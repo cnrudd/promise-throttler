@@ -17,6 +17,10 @@
     "test": "npm run lint && jest --coverage",
     "travis": "npm test && cat ./coverage/lcov.info | coveralls"
   },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/"
+  },
   "keywords": [
     "promise",
     "throttle"
