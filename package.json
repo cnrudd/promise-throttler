@@ -1,18 +1,21 @@
 {
   "name": "promise-throttler",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
   "main": "lib/main.js",
   "author": "Colin Rudd",
   "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cnrudd/promise-throttler.git"
   },
   "scripts": {
     "start": "npm run dist",
-    "dist": "mkdir -p dist && browserify lib/browser.js -o dist/promise-throttle.js",
+    "dist": "mkdir -p dist && browserify lib/browser.js -o dist/promise-throttler.js",
     "lint": "eslint lib/*.js",
     "test": "npm run lint && jest --coverage",
     "travis": "npm test && cat ./coverage/lcov.info | coveralls"
@@ -29,11 +32,13 @@
     "lib/main.js"
   ],
   "devDependencies": {
-    "coveralls": "~3.0.2",
-    "eslint": "^5.6.0",
-    "jest-cli": "^23.6.0",
-    "promise": "^8.0.2",
-    "sinon": "^6.3.4",
-    "browserify": "^16.2.2"
+    "browserify": "^17.0.1",
+    "coveralls": "~3.1.1",
+    "eslint": "^9.39.2",
+    "eslint-plugin-jsdoc": "^61.5.0",
+    "globals": "^16.5.0",
+    "jest-cli": "^30.2.0",
+    "promise": "^8.3.0",
+    "sinon": "^21.0.1"
   }
 }

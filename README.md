@@ -5,10 +5,10 @@ Promise Throttler
 
 This is a small library adapted from (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
-This version differs from JMPerez/promise-throttle in that it will run promises only N time after the previous one has been resolved.  N time is 1 second / requests per second.
+This version differs from JMPerez/promise-throttle in that it will run promises only N time AFTER the previous one HAS BEEN RESOLVED.  N time is 1 second / requests per second.  The JMPerez lib fires the next promise N time after the previous one started.
 
 This approach reduces the risk that your calls are blocked for rate limit abuse due to latent calls piling up on the endpoint.
-If the rate limit is 3 requests per second, you may end up making only 2 1/2 requests per second, but you are virtually guaranteed to not get dinged for exceeding the rate limit.
+If the rate limit is 3 requests per second, you may end up making only an average of 2 1/2 requests per second, but you are virtually guaranteed to not get dinged for exceeding the rate limit.
 
 A queue is created, into which promises from any source in your code can be added.  So, unrelated processes that use the same API endpoint don't have to worry about the other processes causing rate limits to be reached.
 
@@ -24,7 +24,7 @@ The library can be used either server-side or in the browser.
   var PromiseThrottle = require('promise-throttle');
   /**
    * A function that once called returns a promise
-   * @return Promise
+   * @returns Promise
    */
   var myFunction = function(i) {
     return new Promise(function(resolve, reject) {
@@ -61,11 +61,12 @@ The library can be used either server-side or in the browser.
     });
 ```
 
+## Requirements
+* Node.js >= 10.0.0
+
 ## Installation
 
 For node.js, install the module with: `npm i promise-throttle`
-
-If you are using it in a browser, you can use bower: `bower install promise-throttle`
 
 ## Development
 

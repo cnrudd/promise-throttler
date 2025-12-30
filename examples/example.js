@@ -1,22 +1,27 @@
-var Promise = require('promise'),
-  PromiseThrottle = require('../lib/main');
+const PromiseThrottler = require('../lib/main');
 
-var promiseThrottle = new PromiseThrottle({
-  requestsPerSecond: 10,
+const promiseThrottler = new PromiseThrottler({
+  requestsPerSecond: 2,
   promiseImplementation: Promise
 });
 
+/**
+ * Creates a promise that resolves with a random number after a short delay.
+ * @returns {Promise<number>} A promise that resolves to a random number.
+ */
 function createPromise() {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
-      console.log(Math.random());
+      const n = Math.random();
+      console.log(n);
+      resolve(n);
     }, 10);
   });
 }
 
-var amountOfPromises = 1000;
+let amountOfPromises = 10;
 while (amountOfPromises-- > 0) {
-  promiseThrottle.add(function() {
+  promiseThrottler.add(function() {
     return createPromise();
   });
 };
