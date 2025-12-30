@@ -2,7 +2,7 @@
 /* global window */
 
 'use strict';
-window.PromiseThrottle = require('./main');
+window.PromiseThrottler = require('./main');
 
 },{"./main":2}],2:[function(require,module,exports){
 /* exported PromiseThrottler */
