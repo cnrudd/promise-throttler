@@ -18,7 +18,7 @@ Then, you add functions to the `PromiseThrottler` that, once called, return a `P
 
 ## Use
 
-The library can be used either server-side or in the browser.
+The library can be used server-side only. [JMPerez's](https://github.com/JMPerez/promise-throttle) can be used in the browser as well.
 
 ```javascript
 const PromiseThrottler = require('promise-throttler');
@@ -76,7 +76,7 @@ For node.js, install the module with: `npm i promise-throttle`
 ## Development
 
 Install the dependencies using `npm install`.
-Run `npm start` to lint, test and browserify promise-thottle.
+Run `npm start` to lint and test.
 
 ## License
 

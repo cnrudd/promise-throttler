@@ -1,6 +1,6 @@
 {
   "name": "promise-throttler",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
   "main": "lib/main.js",
@@ -14,8 +14,7 @@
     "url": "https://github.com/cnrudd/promise-throttler.git"
   },
   "scripts": {
-    "start": "npm run dist",
-    "dist": "mkdir -p dist && browserify lib/browser.js -o dist/promise-throttler.js",
+    "start": "npm run lint && npm test",
     "lint": "eslint lib/*.js",
     "test": "jest --coverage"
   },
@@ -31,13 +30,11 @@
     "lib/main.js"
   ],
   "devDependencies": {
-    "browserify": "^17.0.1",
     "coveralls": "~3.1.1",
     "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^61.5.0",
     "globals": "^16.5.0",
     "jest-cli": "^30.2.0",
-    "promise": "^8.3.0",
     "sinon": "^21.0.1"
   }
 }
