@@ -18,10 +18,12 @@ Then, you add functions to the `PromiseThrottler` that, once called, return a `P
 
 ## Use
 
-The library can be used server-side only. [JMPerez's](https://github.com/JMPerez/promise-throttle) can be used in the browser as well.
+The library can be used server-side or in the browser.
+This is an ES 6 modules only project.
 
 ```javascript
-const PromiseThrottler = require('promise-throttler');
+import PromiseThrottler from 'promise-throttler';
+
 /**
  * A function that once called returns a promise
  * @param {number} i An index number
