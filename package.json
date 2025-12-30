@@ -17,8 +17,7 @@
     "start": "npm run dist",
     "dist": "mkdir -p dist && browserify lib/browser.js -o dist/promise-throttler.js",
     "lint": "eslint lib/*.js",
-    "test": "npm run lint && jest --coverage",
-    "ci": "npm test"
+    "test": "jest --coverage"
   },
   "jest": {
     "verbose": true,
