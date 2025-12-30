@@ -1,4 +1,4 @@
-const PromiseThrottler = require('../lib/main');
+import PromiseThrottler from '../lib/main.js';
 
 /**
  * A function that once called returns a promise

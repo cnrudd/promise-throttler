@@ -1,8 +1,6 @@
-'use strict';
-
-const sinon = require('sinon');
-
-const PromiseThrottler = require('../lib/main');
+import sinon from 'sinon';
+import { jest, describe, expect } from '@jest/globals';
+import PromiseThrottler from '../lib/main.js';
 
 /**
  * Creates a new PromiseThrottler instance with the specified requests per second.

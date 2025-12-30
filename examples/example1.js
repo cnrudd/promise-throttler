@@ -1,4 +1,4 @@
-const PromiseThrottler = require('../lib/main');
+import PromiseThrottler from '../lib/main.js';
 
 const promiseThrottler = new PromiseThrottler({
   requestsPerSecond: 2,
