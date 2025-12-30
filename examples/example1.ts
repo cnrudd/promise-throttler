@@ -1,4 +1,4 @@
-import PromiseThrottler from '../lib/main.js';
+import PromiseThrottler from '../dist/main.js';
 
 const promiseThrottler = new PromiseThrottler({
   requestsPerSecond: 2,
@@ -7,11 +7,10 @@ const promiseThrottler = new PromiseThrottler({
 
 /**
  * Creates a promise that resolves with a random number after a short delay.
- * @returns {Promise<number>} A promise that resolves to a random number.
  */
-function createPromise() {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+function createPromise(): Promise<number> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
       const n = Math.random();
       console.log(n);
       resolve(n);
@@ -21,7 +20,7 @@ function createPromise() {
 
 let amountOfPromises = 10;
 while (amountOfPromises-- > 0) {
-  promiseThrottler.add(function() {
+  promiseThrottler.add(() => {
     return createPromise();
   });
-};
+}
