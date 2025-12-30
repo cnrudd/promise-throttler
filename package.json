@@ -16,10 +16,12 @@
     "url": "https://github.com/cnrudd/promise-throttler.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run minify",
+    "build:dev": "tsc",
+    "minify": "terser dist/main.js -o dist/main.min.js --source-map",
     "start": "npm run build && npm run lint && npm test",
     "lint": "eslint src/*.ts",
-    "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test": "npm run build:dev && node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
   "jest": {
     "verbose": true,
@@ -43,6 +45,7 @@
   ],
   "files": [
     "dist/main.js",
+    "dist/main.min.js",
     "dist/main.d.ts"
   ],
   "devDependencies": {
@@ -55,6 +58,7 @@
     "eslint-plugin-jsdoc": "^61.5.0",
     "globals": "^16.5.0",
     "jest": "30.2.0",
+    "terser": "^5.44.1",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
   }
