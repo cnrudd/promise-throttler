@@ -3,11 +3,11 @@ Promise Throttler
 
 [![Coverage Status](https://coveralls.io/repos/github/cnrudd/promise-throttler/badge.svg?branch=master)](https://coveralls.io/github/cnrudd/promise-throttler?branch=master)
 
-This is a small library adapted from (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
+This is a small library adapted from JMPerez's (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
 This version differs from JMPerez/promise-throttle in that it will run promises only N time after the previous one **has been resolved/rejected**.  The JMPerez lib fires the next promise N time after the previous one **started**.  In both libraries, N time is 1 second / requests per second.
 
-This approach reduces the risk that your calls are blocked for rate limit abuse due to latent calls piling up on the endpoint.
+This version's approach reduces the risk that your calls are blocked for rate limit abuse due to latent calls piling up on the endpoint.
 If the rate limit is 3 requests per second, you may end up making only an average of 2 1/2 requests per second, but you are virtually guaranteed to not get dinged for exceeding the rate limit.
 
 A queue is created, into which promises from any source in your code can be added.  So, unrelated processes that use the same API endpoint don't have to worry about the other processes causing rate limits to be reached.
