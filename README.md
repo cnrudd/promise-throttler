@@ -18,10 +18,12 @@ Then, you add functions to the `PromiseThrottler` that, once called, return a `P
 
 ## Use
 
-The library can be used either server-side or in the browser.
+The library can be used server-side or in the browser.
+This is an ES 6 modules only project.
 
 ```javascript
-const PromiseThrottler = require('promise-throttler');
+import PromiseThrottler from 'promise-throttler';
+
 /**
  * A function that once called returns a promise
  * @param {number} i An index number
@@ -76,7 +78,7 @@ For node.js, install the module with: `npm i promise-throttle`
 ## Development
 
 Install the dependencies using `npm install`.
-Run `npm start` to lint, test and browserify promise-thottle.
+Run `npm start` to lint and test.
 
 ## License
 
