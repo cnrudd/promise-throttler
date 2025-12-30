@@ -4,7 +4,13 @@
   "type": "module",
   "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
-  "main": "dist/main.js",
+  "main": "dist/main.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/main.min.js",
+      "development": "./dist/main.js"
+    }
+  },
   "types": "dist/main.d.ts",
   "author": "Colin Rudd",
   "license": "MIT",

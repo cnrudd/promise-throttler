@@ -1,4 +1,4 @@
-import PromiseThrottler from '../dist/main.js';
+import PromiseThrottler from 'promise-throttler';
 
 const promiseThrottler = new PromiseThrottler({
   requestsPerSecond: 2,

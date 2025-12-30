@@ -97,7 +97,7 @@ describe('PromiseThrottler', () => {
       };
 
       return pt10.addAll([fn1, fn2])
-        .then((values: (number|Error)[]) => {
+        .then((values: number[]) => {
           expect(values[0]).toBe(12);
           expect(values[1]).toBe(34);
         });

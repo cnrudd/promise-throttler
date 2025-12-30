@@ -1,4 +1,4 @@
-import PromiseThrottler from '../dist/main.js';
+import PromiseThrottler from 'promise-throttler';
 
 /**
  * A function that once called returns a promise
