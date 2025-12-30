@@ -1,15 +1,13 @@
-import PromiseThrottler from '../lib/main.js';
+import PromiseThrottler from '../dist/main.js';
 
 /**
  * A function that once called returns a promise
- * @param {number} i An index number
- * @returns {Promise<number>} A promise that resolves to the given index number
  */
-const myFunction = function(i) {
-  return new Promise(function(resolve, reject) {
+const myFunction = (i: number): Promise<number> => {
+  return new Promise((resolve) => {
     // here we simulate that the promise runs some code
     // asynchronously
-    setTimeout(function() {
+    setTimeout(() => {
       console.log(i + ': ' + Math.random());
       resolve(i);
     }, 10);
@@ -21,24 +19,23 @@ const promiseThrottle = new PromiseThrottler({
   promiseImplementation: Promise  // the Promise library you are using
 });
 
-
 // Example using add from a loop
 let amountOfPromises = 10;
 const initialCount = amountOfPromises;
 while (amountOfPromises-- > 0) {
-  promiseThrottle.add(myFunction.bind(this, initialCount - amountOfPromises))
-    .then(function(i) {
+  const idx = initialCount - amountOfPromises;
+  promiseThrottle.add(() => myFunction(idx))
+    .then((i: number) => {
       console.log('Promise ' + i + ' done');
     });
 }
 
-
 // Example using Promise.all
-const one = promiseThrottle.add(myFunction.bind(this, 1));
-const two = promiseThrottle.add(myFunction.bind(this, 2));
-const three = promiseThrottle.add(myFunction.bind(this, 3));
+const one = promiseThrottle.add(() => myFunction(1));
+const two = promiseThrottle.add(() => myFunction(2));
+const three = promiseThrottle.add(() => myFunction(3));
 
 Promise.all([one, two, three])
-  .then(function(r) {
+  .then((r: number[]) => {
     console.log('Promises ' + r.join(', ') + ' done');
   });
