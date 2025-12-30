@@ -33,4 +33,5 @@ jobs:
 
     - name: Coveralls
       uses: coverallsapp/github-action@v2
-      file: ./coverage/lcov.info
+      with:
+        file: ./coverage/lcov.info
