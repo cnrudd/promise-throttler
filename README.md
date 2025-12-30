@@ -12,53 +12,58 @@ If the rate limit is 3 requests per second, you may end up making only an averag
 
 A queue is created, into which promises from any source in your code can be added.  So, unrelated processes that use the same API endpoint don't have to worry about the other processes causing rate limits to be reached.
 
-This library has no dependencies. If you are running this on Node.js, you will need to pass whatever Promise library you are using in the constructor.
+This library has no dependencies. If you are running this on Node.js, you can use the global Promise, or you can pass whatever Promise library you are using in the constructor.
 
-Then, you add functions to the `PromiseThrottle` that, once called, return a `Promise`.
+Then, you add functions to the `PromiseThrottler` that, once called, return a `Promise`.
 
 ## Use
 
 The library can be used either server-side or in the browser.
 
 ```javascript
-  var PromiseThrottle = require('promise-throttle');
-  /**
-   * A function that once called returns a promise
-   * @returns Promise
-   */
-  var myFunction = function(i) {
-    return new Promise(function(resolve, reject) {
-      // here we simulate that the promise runs some code
-      // asynchronously
-      setTimeout(function() {
-        console.log(i + ": " + Math.random());
-        resolve(i);
-      }, 10);
-    });
-  };
-
-  var promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 1,           // up to 1 request per second
-    promiseImplementation: Promise  // the Promise library you are using
+const PromiseThrottler = require('promise-throttler');
+/**
+ * A function that once called returns a promise
+ * @param {number} i An index number
+ * @returns {Promise<number>} A promise that resolves to the given index number
+ */
+const myFunction = function(i) {
+  return new Promise(function(resolve, reject) {
+    // here we simulate that the promise runs some code
+    // asynchronously
+    setTimeout(function() {
+      console.log(i + ': ' + Math.random());
+      resolve(i);
+    }, 10);
   });
+};
 
-  var amountOfPromises = 10;
-  while (amountOfPromises-- > 0) {
-    promiseThrottle.add(myFunction.bind(this, amountOfPromises))
-      .then(function(i) {
-        console.log("Promise " + i + " done");
-      });
-  }
+const promiseThrottle = new PromiseThrottler({
+  requestsPerSecond: 1,           // up to 1 request per second
+  promiseImplementation: Promise  // the Promise library you are using
+});
 
-  // example using Promise.all
-  var one = promiseThrottle.add(myFunction.bind(this, 1));
-  var two = promiseThrottle.add(myFunction.bind(this, 2));
-  var three = promiseThrottle.add(myFunction.bind(this, 3));
 
-  Promise.all([one, two, three])
-    .then(function(r) {
-        console.log("Promises " + r.join(", ") + " done");
+// Example using add from a loop
+let amountOfPromises = 10;
+const initialCount = amountOfPromises;
+while (amountOfPromises-- > 0) {
+  promiseThrottle.add(myFunction.bind(this, initialCount - amountOfPromises))
+    .then(function(i) {
+      console.log('Promise ' + i + ' done');
     });
+}
+
+
+// Example using Promise.all
+const one = promiseThrottle.add(myFunction.bind(this, 1));
+const two = promiseThrottle.add(myFunction.bind(this, 2));
+const three = promiseThrottle.add(myFunction.bind(this, 3));
+
+Promise.all([one, two, three])
+  .then(function(r) {
+    console.log('Promises ' + r.join(', ') + ' done');
+  });
 ```
 
 ## Requirements
