@@ -1,9 +1,13 @@
 import PromiseThrottler from 'promise-throttler';
 import https from 'https';
 
-// Create a throttler that allows 2 requests per second
+// Get requestsPerSecond from command line argument, default to 2
+const arg = process.argv[2];
+const requestsPerSecond = arg && !isNaN(Number(arg)) ? Number(arg) : 2;
+
+// Create a throttler with the specified or default rate
 const throttler = new PromiseThrottler({
-  requestsPerSecond: 2
+  requestsPerSecond
 });
 
 function formatEpochToHourMinSecMs(epochMs) {
@@ -51,7 +55,7 @@ function makeHttpRequest(url) {
  */
 async function demonstrateThrottling() {
   console.log('🚀 Starting throttled HTTP requests demo...');
-  console.log('📊 Rate limit: 2 requests per second\n');
+  console.log(`📊 Rate limit: ${requestsPerSecond} requests per second\n`);
 
   // List of URLs to request (using httpbin.org for testing)
   const urls = [
