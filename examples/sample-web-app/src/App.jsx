@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import PromiseThrottler from 'promise-throttler'
 
-const throttler = new PromiseThrottler({
-  requestsPerSecond: 2
-})
-
 /**
  * Formats an epoch time in milliseconds to a string in HH:MM:SS.mmm format.
  * @param {number} epochMs - The epoch time in milliseconds.
@@ -22,6 +18,8 @@ function formatEpochToHourMinSecMs(epochMs) {
 function App() {
   const [requests, setRequests] = useState([])
   const [isRunning, setIsRunning] = useState(false)
+  const [requestCount, setRequestCount] = useState(6)
+  const [requestsPerSecond, setRequestsPerSecond] = useState(2)
 
   const makeRequest = (id) => {
     const startTime = Date.now();
@@ -39,7 +37,8 @@ function App() {
     setIsRunning(true)
     setRequests([])
     
-    const promises = Array.from({ length: 6 }, (_, i) => 
+    const throttler = new PromiseThrottler({ requestsPerSecond })
+    const promises = Array.from({ length: requestCount }, (_, i) => 
       throttler.add(() => makeRequest(i + 1))
     )
 
@@ -56,7 +55,35 @@ function App() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Promise Throttler Demo</h1>
-      <p>This demo makes 6 API requests throttled to 2 requests per second.</p>
+      <p>Configure and run throttled API requests.</p>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ display: 'block', marginBottom: '8px' }}>
+          Request Count:
+          <input 
+            type="number" 
+            value={requestCount} 
+            onChange={(e) => setRequestCount(Number(e.target.value))} 
+            min="1" 
+            max="20"
+            disabled={isRunning}
+            style={{ marginLeft: '8px', padding: '4px', width: '60px' }}
+          />
+        </label>
+        <label style={{ display: 'block', marginBottom: '8px' }}>
+          Requests per Second:
+          <input 
+            type="number" 
+            value={requestsPerSecond} 
+            onChange={(e) => setRequestsPerSecond(Number(e.target.value))} 
+            min="0.1" 
+            max="10" 
+            step="0.1"
+            disabled={isRunning}
+            style={{ marginLeft: '8px', padding: '4px', width: '60px' }}
+          />
+        </label>
+      </div>
       
       <button 
         onClick={runDemo} 
