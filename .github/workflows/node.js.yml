@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -14,7 +14,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [lts/*]
+        node-version: [latest, lts/*]
+        # See Supported Version Syntax: https://github.com/actions/setup-node?tab=readme-ov-file#supported-version-syntax
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
