@@ -10,6 +10,11 @@ const throttler = new PromiseThrottler({
   requestsPerSecond
 });
 
+/**
+ * Formats an epoch time in milliseconds to a string in HH:MM:SS.mmm format.
+ * @param {number} epochMs - The epoch time in milliseconds.
+ * @returns {string} The formatted time string.
+ */
 function formatEpochToHourMinSecMs(epochMs) {
   const date = new Date(epochMs);
   const hours = date.getHours().toString().padStart(2, '0');
@@ -21,6 +26,7 @@ function formatEpochToHourMinSecMs(epochMs) {
 
 /**
  * Makes an HTTP GET request to a URL
+ * @param {string} url - The URL to request.
  */
 function makeHttpRequest(url) {
   return new Promise((resolve, reject) => {
