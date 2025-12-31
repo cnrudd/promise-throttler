@@ -1,6 +1,6 @@
 {
   "name": "promise-throttler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
