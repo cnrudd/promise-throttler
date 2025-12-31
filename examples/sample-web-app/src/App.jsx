@@ -55,7 +55,7 @@ function App() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Promise Throttler Demo</h1>
-      <p>Configure and run throttled API requests.</p>
+      <p>Configure and run throttled API requests to https://httpbin.org.</p>
       
       <div style={{ marginBottom: '20px' }}>
         <label style={{ display: 'block', marginBottom: '8px' }}>
