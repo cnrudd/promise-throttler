@@ -4,7 +4,7 @@
 name: Node.js CI
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
   pull_request:
     branches: [ "main" ]
 
@@ -38,6 +38,7 @@ jobs:
     - name: Run tests
       run: npm run test
 
+    # See Coverall setup docs: https://github.com/marketplace/actions/coveralls-github-action 
     - name: Coveralls
       uses: coverallsapp/github-action@v2
       with:
