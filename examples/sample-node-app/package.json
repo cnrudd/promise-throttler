@@ -1,0 +1,16 @@
+{
+  "name": "sample-node-app",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sample Node.js app demonstrating promise-throttler usage",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "promise-throttler": "latest"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
