@@ -65,12 +65,12 @@ async function demonstrateThrottling() {
 
   // List of URLs to request (using httpbin.org for testing)
   const urls = [
-    'https://httpbin.org/delay/0.1',
-    'https://httpbin.org/delay/0.2', 
-    'https://httpbin.org/delay/0.3',
-    'https://httpbin.org/delay/0.4',
-    'https://httpbin.org/delay/0.5',
-    'https://httpbin.org/delay/0.6'
+    'https://httpbin.org?count=1',
+    'https://httpbin.org?count=2',
+    'https://httpbin.org?count=3',
+    'https://httpbin.org?count=4',
+    'https://httpbin.org?count=5',
+    'https://httpbin.org?count=6'
   ];
 
   const startTime = Date.now();
