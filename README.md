@@ -88,3 +88,6 @@ Run `npm start` to lint and test.
 ## License
 
 MIT
+
+## Top Alternatives on NPM
+* https://www.npmjs.com/search?page=0&q=keywords%3Apromise%20throttle&sortBy=score&perPage=20
