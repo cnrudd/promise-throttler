@@ -3,6 +3,10 @@ Promise Throttler
 
 [![Coverage Status](https://coveralls.io/repos/github/cnrudd/promise-throttler/badge.svg?branch=main)](https://coveralls.io/github/cnrudd/promise-throttler?branch=main)
 [![Node.js CI](https://github.com/cnrudd/promise-throttler/actions/workflows/node.js.yml/badge.svg)](https://github.com/cnrudd/promise-throttler/actions/workflows/node.js.yml)
+[![npm version](https://badge.fury.io/js/promise-throttler.svg)](https://badge.fury.io/js/promise-throttler)
+[![npm downloads](https://img.shields.io/npm/dm/promise-throttler.svg)](https://www.npmjs.com/package/promise-throttler)
+[![Bundlephobia](https://badgen.net/bundlephobia/min/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
+[![Bundlephobia](https://badgen.net/bundlephobia/minzip/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
 
 This is a small library adapted from JMPerez's (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
