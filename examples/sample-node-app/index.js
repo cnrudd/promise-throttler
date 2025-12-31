@@ -6,6 +6,15 @@ const throttler = new PromiseThrottler({
   requestsPerSecond: 2
 });
 
+function formatEpochToHourMinSecMs(epochMs) {
+  const date = new Date(epochMs);
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+  const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
 /**
  * Makes an HTTP GET request to a URL
  */
@@ -22,7 +31,7 @@ function makeHttpRequest(url) {
       
       res.on('end', () => {
         const duration = Date.now() - startTime;
-        console.log(`✓ Request to ${url} completed in ${duration}ms`);
+        console.log(`✓ Request to ${url} started at ${formatEpochToHourMinSecMs(startTime)}, completed in ${duration}ms`);
         resolve({
           url,
           statusCode: res.statusCode,
@@ -48,10 +57,10 @@ async function demonstrateThrottling() {
   const urls = [
     'https://httpbin.org/delay/0.1',
     'https://httpbin.org/delay/0.2', 
-    'https://httpbin.org/delay/0.1',
     'https://httpbin.org/delay/0.3',
-    'https://httpbin.org/delay/0.1',
-    'https://httpbin.org/delay/0.2'
+    'https://httpbin.org/delay/0.4',
+    'https://httpbin.org/delay/0.5',
+    'https://httpbin.org/delay/0.6'
   ];
 
   const startTime = Date.now();
