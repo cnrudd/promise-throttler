@@ -70,7 +70,7 @@ Promise.all([one, two, three])
 ```
 
 ## Requirements
-* Node.js >= 10.0.0
+* Node.js >= 14.0.0
 
 ## Installation
 

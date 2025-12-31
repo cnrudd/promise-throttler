@@ -1,6 +1,6 @@
 {
   "name": "promise-throttler",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "https://github.com/cnrudd/promise-throttler",
   "description": "A library to throttle promises",
@@ -27,7 +27,8 @@
     "minify": "terser dist/main.js -o dist/main.min.js --source-map",
     "start": "npm run build && npm run lint && npm test",
     "lint": "eslint src/*.ts",
-    "test": "npm run build:dev && node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "prepublishOnly": "npm test"
   },
   "jest": {
     "verbose": true,
@@ -47,12 +48,17 @@
   },
   "keywords": [
     "promise",
-    "throttle"
+    "throttle",
+    "async",
+		"await",
+		"promises"
   ],
   "files": [
     "dist/main.js",
     "dist/main.min.js",
-    "dist/main.d.ts"
+    "dist/main.min.js.map",
+    "dist/main.d.ts",
+    "dist/main.d.ts.map"
   ],
   "devDependencies": {
     "@types/jest": "^30.0.0",
