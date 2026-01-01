@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import PromiseThrottler from 'promise-throttler'
 
 /**
@@ -20,35 +20,39 @@ function App() {
   const [isRunning, setIsRunning] = useState(false)
   const [requestCount, setRequestCount] = useState(6)
   const [requestsPerSecond, setRequestsPerSecond] = useState(2)
+  const [runSequentially, setRunSequentially] = useState(false)
 
   const makeRequest = (id) => {
     const startTime = Date.now();
     return fetch(`https://httpbin.org?count=${id}`)
-      .then(response => ({
+      .then(response => {
+        const result = {
         id,
         status: response.status,
         startTime: formatEpochToHourMinSecMs(startTime),
         endTime: Date.now(),
         duration: Date.now() - startTime
-      }))
+      };
+      setRequests(prev => [...prev, result])});
   }
 
   const runDemo = async () => {
     setIsRunning(true)
     setRequests([])
     
-    const throttler = new PromiseThrottler({ requestsPerSecond })
-    const promises = Array.from({ length: requestCount }, (_, i) => 
-      throttler.add(() => makeRequest(i + 1))
-    )
-
-    for (const promise of promises) {
-      promise.then(result => {
-        setRequests(prev => [...prev, result])
-      })
+    const throttler = new PromiseThrottler({ requestsPerSecond, runSequentially })
+    
+    if (!runSequentially) {
+      const fns = Array.from({ length: requestCount }, (_, i) => () => makeRequest(i + 1))
+      await throttler.addAll(fns)
+    } else {
+      const promises = Array.from({ length: requestCount }, (_, i) => 
+        throttler.add(() => makeRequest(i + 1))
+      )
+      
+      await Promise.all(promises)
     }
-
-    await Promise.all(promises)
+    
     setIsRunning(false)
   }
 
@@ -81,6 +85,16 @@ function App() {
             step="0.1"
             disabled={isRunning}
             style={{ marginLeft: '8px', padding: '4px', width: '60px' }}
+          />
+        </label>
+        <label style={{ display: 'block', marginBottom: '8px' }}>
+          Run Sequentially:
+          <input 
+            type="checkbox" 
+            checked={runSequentially} 
+            onChange={(e) => setRunSequentially(e.target.checked)} 
+            disabled={isRunning}
+            style={{ marginLeft: '8px' }}
           />
         </label>
       </div>
