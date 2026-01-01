@@ -1,5 +1,5 @@
 import { jest, describe, expect } from '@jest/globals';
-import PromiseThrottler from '../dist/main.js';
+import PromiseThrottler from '../src/main';
 
 /**
  * Creates a new PromiseThrottler instance with the specified requests per second.
