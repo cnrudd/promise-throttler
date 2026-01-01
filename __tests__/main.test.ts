@@ -82,8 +82,8 @@ describe('PromiseThrottler', () => {
 
       pt10.addAll([fn1, fn2]);
 
-      expect(pt10.add).toHaveBeenCalledWith(fn1);
-      expect(pt10.add).toHaveBeenCalledWith(fn2);
+      expect(pt10.add).toHaveBeenCalledWith(fn1, false);
+      expect(pt10.add).toHaveBeenCalledWith(fn2, true);
     });
 
     it('should return a promise that is resolved with the proper values', () => {
@@ -139,18 +139,22 @@ describe('PromiseThrottler', () => {
 
       pt2.addAll(fns);
 
+      // 2 resolved at 1s
       setTimeout(() => {
         resolved.push(resolvedCount);
       }, 700);
 
+       // 4 resolved at 2s
       setTimeout(() => {
         resolved.push(resolvedCount);
       }, 1700);
 
+       // 6 resolved at 3s
       setTimeout(() => {
         resolved.push(resolvedCount);
       }, 2700);
 
+       // 8 resolved at 4s
       setTimeout(() => {
         resolved.push(resolvedCount);
         expect(resolved).toEqual([2, 4, 6, 8]);

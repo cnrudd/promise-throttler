@@ -1,13 +1,14 @@
 interface PromiseThrottlerOptions {
     requestsPerSecond: number;
     promiseImplementation?: PromiseConstructor;
+    runSequentially?: boolean;
 }
 /**
  * A library to throttle promises
  */
 export default class PromiseThrottler {
+    private runSequentially;
     private requestsPerSecond;
-    private delay;
     private delayId;
     private executing;
     private queued;
@@ -23,7 +24,7 @@ export default class PromiseThrottler {
      * @param promise A function returning the promise to be added
      * @returns A promise
      */
-    add<T>(promise: () => Promise<T>): Promise<T>;
+    add<T>(promise: () => Promise<T>, dequeueImmediately?: boolean): Promise<T>;
     /**
      * Adds all the promises passed as parameters
      * @param promises An array of functions that return a promise
@@ -35,9 +36,13 @@ export default class PromiseThrottler {
      */
     private dequeue;
     /**
-     * Executes the promise
+     * Executes the promise sequentially
      */
-    private _execute;
+    private _executeSequentially;
+    /**
+     * Executes promises in parallel
+     */
+    private _executeInParallel;
     private _setupNextDequeue;
 }
 export {};

@@ -9,8 +9,8 @@ export default class PromiseThrottler {
      */
     constructor(options) {
         this.requestsPerSecond = options.requestsPerSecond;
-        this.promiseImplementation = options.promiseImplementation || Promise;
-        this.delay = Math.floor(1000 / this.requestsPerSecond);
+        this.runSequentially = options.runSequentially === true;
+        this.promiseImplementation = options.promiseImplementation ?? Promise;
         this.delayId = null;
         this.executing = false;
         this.queued = [];
@@ -20,14 +20,14 @@ export default class PromiseThrottler {
      * @param promise A function returning the promise to be added
      * @returns A promise
      */
-    add(promise) {
+    add(promise, dequeueImmediately = true) {
         return new this.promiseImplementation((resolve, reject) => {
             this.queued.push({
                 resolve,
                 reject,
                 promise
             });
-            if (!this.delayId && !this.executing) {
+            if (dequeueImmediately && !this.delayId && !this.executing) {
                 this.dequeue();
             }
         });
@@ -38,7 +38,12 @@ export default class PromiseThrottler {
      * @returns A promise that resolves to an array of results
      */
     addAll(promises) {
-        const addedPromises = promises.map(promise => this.add(promise));
+        const addedPromises = promises.map((promise, idx) => {
+            const dequeueImmediately = this.runSequentially ?
+                true :
+                idx === promises.length - 1;
+            return this.add(promise, dequeueImmediately);
+        });
         return Promise.all(addedPromises);
     }
     /**
@@ -49,12 +54,16 @@ export default class PromiseThrottler {
             this.delayId = null;
             return;
         }
-        this._execute();
+        if (this.runSequentially) {
+            this._executeSequentially();
+            return;
+        }
+        this._executeInParallel();
     }
     /**
-     * Executes the promise
+     * Executes the promise sequentially
      */
-    _execute() {
+    _executeSequentially() {
         const candidate = this.queued.shift();
         this.executing = true;
         candidate.promise()
@@ -65,12 +74,32 @@ export default class PromiseThrottler {
             candidate.reject(r);
         })
             .finally(() => {
-            this._setupNextDequeue();
+            const delay = Math.floor(1000 / this.requestsPerSecond);
+            this._setupNextDequeue(delay);
         });
     }
-    _setupNextDequeue() {
+    /**
+     * Executes promises in parallel
+     */
+    _executeInParallel() {
+        const pCount = this.requestsPerSecond >= 1 ? this.requestsPerSecond : 1;
+        const delay = this.requestsPerSecond >= 1 ? 1000 : Math.floor(1000 / this.requestsPerSecond);
+        const candidates = this.queued.splice(0, pCount);
+        this.executing = true;
+        Promise.all(candidates.map(candidate => candidate.promise()))
+            .then((results) => {
+            results.forEach((result, index) => candidates[index].resolve(result));
+        })
+            .catch((reason) => {
+            candidates.forEach((candidate) => candidate.reject(reason));
+        })
+            .finally(() => {
+            this._setupNextDequeue(delay);
+        });
+    }
+    _setupNextDequeue(delay) {
         this.executing = false;
-        this.delayId = setTimeout(() => this.dequeue(), this.delay);
+        this.delayId = setTimeout(() => this.dequeue(), delay);
     }
 }
 //# sourceMappingURL=main.js.map

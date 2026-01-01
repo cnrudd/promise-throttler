@@ -3,14 +3,16 @@ Promise Throttler
 
 [![Coverage Status](https://coveralls.io/repos/github/cnrudd/promise-throttler/badge.svg?branch=main)](https://coveralls.io/github/cnrudd/promise-throttler?branch=main)
 [![Node.js CI](https://github.com/cnrudd/promise-throttler/actions/workflows/node.js.yml/badge.svg)](https://github.com/cnrudd/promise-throttler/actions/workflows/node.js.yml)
-[![npm version](https://badge.fury.io/js/promise-throttler.svg)](https://badge.fury.io/js/promise-throttler)
+
+[![npm version](https://badge.fury.io/js/promise-throttler.svg?icon=si%3Anpm)](https://badge.fury.io/js/promise-throttler)
 [![npm downloads](https://badgen.net/npm/dm/promise-throttler)](https://www.npmjs.com/package/promise-throttler)
 [![Bundlephobia](https://badgen.net/bundlephobia/min/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
 [![Bundlephobia](https://badgen.net/bundlephobia/minzip/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
 [![Bundlephobia](https://badgen.net/bundlephobia/dependency-count/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
-[![Bundlephobia](https://badgen.net/bundlephobia/tree-shaking/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
-[![Bundlephobia](https://badgen.net/npm/license/promise-throttler)]()
+
 [![Bundlephobia](https://badgen.net/badge/icon/typescript?icon=typescript&label)]()
+
+[![Bundlephobia](https://badgen.net/npm/license/promise-throttler)]()
 
 This is a small library adapted from JMPerez's (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
@@ -30,6 +32,7 @@ Then, you add functions to the `PromiseThrottler` that, once called, return a `P
 The library can be used server-side or in the browser.
 This is an ES 6 modules only project.
 
+#### Basic Example
 ```javascript
 import PromiseThrottler from 'promise-throttler';
 
@@ -76,6 +79,9 @@ Promise.all([one, two, three])
     console.log('Promises ' + r.join(', ') + ' done');
   });
 ```
+
+#### Other Examples
+In the `examples` directory, there is a sample react web app and a sample nodejs app.  Both apps demonstrate making real calls to https://httpbin.org.
 
 ## Requirements
 * Node.js >= 14.0.0
