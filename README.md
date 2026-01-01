@@ -27,6 +27,35 @@ This library has no dependencies. If you are running this on Node.js, you can us
 
 Then, you add functions to the `PromiseThrottler` that, once called, return a `Promise`.
 
+## API
+```javascript
+interface PromiseThrottlerOptions {
+
+  /**
+   * The amount of requests per second the library will limit to
+   */
+  requestsPerSecond: number;
+
+  /**
+   * The Promise library you are using (defaults to native Promise)
+   */
+  promiseImplementation?: PromiseConstructor;
+
+  /**
+   * Whether the promises should be run sequentially or not. Defaults to false.
+   * If your `requestsPerSecond` limit is greater than 2, using parallel execution (`runSequentially: false`) 
+   * will usually result in faster total execution time.
+   * If your `requestsPerSecond` limit is less than 1, ie: 0.3 or 1 promise every 3 seconds, this flag has no effect, promises are run sequentially.
+   * Similarly, if you use `add` to add promises one by one, they will be run sequentially.
+   */
+  runSequentially?: boolean;
+}
+
+const myAppsPromiseThrottle = new PromiseThrottler({
+  requestsPerSecond: 5,    // up to 5 request per second
+});
+```
+
 ## Use
 
 The library can be used server-side or in the browser.

@@ -1,6 +1,21 @@
 interface PromiseThrottlerOptions {
+
+  /**
+   * The amount of requests per second the library will limit to
+   */
   requestsPerSecond: number;
+
+  /**
+   * The Promise library you are using (defaults to native Promise)
+   */
   promiseImplementation?: PromiseConstructor;
+
+  /**
+   * Whether the promises should be run sequentially or not. Defaults to false.
+   * If your `requestsPerSecond` limit is greater than 2, using parallel execution (`runSequentially: false`) 
+   * will usually result in faster total execution time.
+   * If your `requestsPerSecond` limit is less than 1, ie: 0.3 or 1 promise every 3 seconds, this flag has no effect.
+   */
   runSequentially?: boolean;
 }
 
@@ -22,12 +37,6 @@ export default class PromiseThrottler {
 
   promiseImplementation: PromiseConstructor;
 
-
-  /**
-   * @param options A set of options to pass to the throttle function
-   * @param options.requestsPerSecond The amount of requests per second the library will limit to
-   * @param options.promiseImplementation The Promise library you are using (defaults to native Promise)
-   */
   constructor(options: PromiseThrottlerOptions) {
     this.requestsPerSecond = options.requestsPerSecond;
     this.runSequentially = options.runSequentially === true;
@@ -40,10 +49,35 @@ export default class PromiseThrottler {
   /**
    * Adds a promise
    * @param promise A function returning the promise to be added
+   * @returns A promise
+   */
+  add<T>(promise: () => Promise<T>): Promise<T> {
+    return this.addInternal<T>(promise);
+  }
+
+  /**
+   * Adds all the promises passed as parameters
+   * @param promises An array of functions that return a promise
+   * @returns A promise that resolves to an array of results
+   */
+  addAll<T>(promises: (() => Promise<T>)[]): Promise<T[]> {
+    const addedPromises = promises.map((promise, idx) => {
+      const dequeueImmediately = this.runSequentially ? 
+        true :
+        idx === promises.length - 1;
+
+      return this.addInternal<T>(promise, dequeueImmediately);
+    });
+    return Promise.all(addedPromises);
+  }
+
+  /**
+   * Adds a promise
+   * @param promise A function returning the promise to be added
    * @param dequeueImmediately Whether the promise should be dequeued immediately or not, defaults to true
    * @returns A promise
    */
-  add<T>(promise: () => Promise<T>, dequeueImmediately = true): Promise<T> {
+  private addInternal<T>(promise: () => Promise<T>, dequeueImmediately = true): Promise<T> {
     return new this.promiseImplementation<T>((resolve, reject) => {
       this.queued.push({
         resolve,
@@ -58,23 +92,7 @@ export default class PromiseThrottler {
   }
 
   /**
-   * Adds all the promises passed as parameters
-   * @param promises An array of functions that return a promise
-   * @returns A promise that resolves to an array of results
-   */
-  addAll<T>(promises: (() => Promise<T>)[]): Promise<T[]> {
-    const addedPromises = promises.map((promise, idx) => {
-      const dequeueImmediately = this.runSequentially ? 
-        true :
-        idx === promises.length - 1;
-
-      return this.add(promise, dequeueImmediately);
-    });
-    return Promise.all(addedPromises);
-  }
-
-  /**
-   * Dequeues a promise
+   * Dequeues all promises in the promise queue.
    */
   private dequeue(): void {
     if (this.queued.length === 0) {
@@ -83,16 +101,16 @@ export default class PromiseThrottler {
     }
 
     if (this.runSequentially) {
-      this._executeSequentially();
+      this.executeSequentially();
       return;
     }
-    this._executeInParallel();
+    this.executeInParallel();
   }
 
   /**
    * Executes the promise sequentially
    */
-  private _executeSequentially(): void {
+  private executeSequentially(): void {
     const candidate = this.queued.shift()!;
 
     this.executing = true;
@@ -105,14 +123,14 @@ export default class PromiseThrottler {
       })
       .finally(() => {
         const delay = Math.floor(1000 / this.requestsPerSecond);
-        this._setupNextDequeue(delay);
+        this.setupNextDequeue(delay);
       });
   }
 
   /**
    * Executes promises in parallel
    */
-  private _executeInParallel(): void {
+  private executeInParallel(): void {
     const pCount = this.requestsPerSecond >= 1 ? this.requestsPerSecond : 1;
     const delay = this.requestsPerSecond >= 1 ? 1000 : Math.floor(1000 / this.requestsPerSecond);
     const candidates = this.queued.splice(0, pCount);
@@ -126,11 +144,11 @@ export default class PromiseThrottler {
         candidates.forEach((candidate) => candidate.reject(reason));
       })
       .finally(() => {
-        this._setupNextDequeue(delay);
+        this.setupNextDequeue(delay);
       });
   }
 
-  private _setupNextDequeue(delay: number): void {
+  private setupNextDequeue(delay: number): void {
     this.executing = false;
     this.delayId = setTimeout(() => this.dequeue(), delay);
   }

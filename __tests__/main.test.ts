@@ -81,12 +81,12 @@ describe('PromiseThrottler', () => {
           const fn1 = (): Promise<void> => Promise.resolve();
           const fn2 = (): Promise<void> => Promise.resolve();
 
-          jest.spyOn(pt10, 'add');
+          jest.spyOn(pt10 as any, 'addInternal');
 
           pt10.addAll([fn1, fn2]);
 
-          expect(pt10.add).toHaveBeenCalledWith(fn1, runSequentially ? true : false);
-          expect(pt10.add).toHaveBeenCalledWith(fn2, true);
+          expect((pt10 as any).addInternal).toHaveBeenCalledWith(fn1, runSequentially ? true : false);
+          expect((pt10 as any).addInternal).toHaveBeenCalledWith(fn2, true);
         });
 
         it('should return a promise that is resolved with the proper values', () => {
@@ -168,7 +168,7 @@ describe('PromiseThrottler', () => {
     });
   });
 
-  describe('requestsPerSecond < 1 handling in paralled execution', () => {
+  describe('requestsPerSecond < 1 handling in parallel execution', () => {
     it('should handle requestsPerSecond < 1 in parallel execution', (done) => {
       const pt = createPromiseThrottler(0.5, false);
       let resolvedCount = 0;

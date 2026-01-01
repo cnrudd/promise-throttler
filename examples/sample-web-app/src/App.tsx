@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import PromiseThrottler from 'promise-throttler'
+import { useState } from 'react';
+import PromiseThrottler from '../../..';
 
 interface RequestResult {
   id: number;
@@ -46,22 +46,22 @@ function App() {
     setRequests([]);
     const demoStartTime = Date.now();
     
-    const throttler = new PromiseThrottler({ requestsPerSecond, runSequentially })
+    const throttler = new PromiseThrottler({ requestsPerSecond, runSequentially });
     
     if (!runSequentially) {
-      const fns = Array.from({ length: requestCount }, (_, i) => () => makeRequest(i + 1))
-      await throttler.addAll(fns)
+      const fns = Array.from({ length: requestCount }, (_, i) => () => makeRequest(i + 1));
+      await throttler.addAll(fns);
     } else {
       const promises = Array.from({ length: requestCount }, (_, i) => 
         throttler.add(() => makeRequest(i + 1))
-      )
+      );
       
-      await Promise.all(promises)
+      await Promise.all(promises);
     }
     
     const demoEndTime = Date.now();
     setDemoDuration(demoEndTime - demoStartTime);
-    setIsRunning(false)
+    setIsRunning(false);
   }
 
   return (

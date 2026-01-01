@@ -19,8 +19,11 @@ function createPromise(): Promise<number> {
 }
 
 let amountOfPromises = 10;
+const promises = [];
 while (amountOfPromises-- > 0) {
-  promiseThrottler.add(() => {
-    return createPromise();
-  });
+  promises.push(() => createPromise())
 }
+
+// use addAll to add all promises at once and
+// ensure they will run in parallel.
+promiseThrottler.addAll(promises);

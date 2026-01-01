@@ -1,10 +1,10 @@
 {
   "name": "promise-throttler",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "type": "module",
   "sideEffects": false,
   "homepage": "https://github.com/cnrudd/promise-throttler",
-  "description": "A library to throttle promises",
+  "description": "A library to throttle promises sequentially or in parallel",
   "main": "dist/main.min.js",
   "exports": {
     ".": {
