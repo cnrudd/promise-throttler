@@ -21,9 +21,10 @@ function formatEpochToHourMinSecMs(epochMs: number): string {
 function App() {
   const [requests, setRequests] = useState<RequestResult[]>([])
   const [isRunning, setIsRunning] = useState<boolean>(false)
-  const [requestCount, setRequestCount] = useState<number>(6)
-  const [requestsPerSecond, setRequestsPerSecond] = useState<number>(2)
+  const [requestCount, setRequestCount] = useState<number>(20)
+  const [requestsPerSecond, setRequestsPerSecond] = useState<number>(5)
   const [runSequentially, setRunSequentially] = useState<boolean>(false)
+  const [demoDuration, setDemoDuration] = useState<number>(0);
 
   const makeRequest = (id: number): Promise<void> => {
     const startTime = Date.now();
@@ -41,8 +42,9 @@ function App() {
   }
 
   const runDemo = async (): Promise<void> => {
-    setIsRunning(true)
-    setRequests([])
+    setIsRunning(true);
+    setRequests([]);
+    const demoStartTime = Date.now();
     
     const throttler = new PromiseThrottler({ requestsPerSecond, runSequentially })
     
@@ -57,6 +59,8 @@ function App() {
       await Promise.all(promises)
     }
     
+    const demoEndTime = Date.now();
+    setDemoDuration(demoEndTime - demoStartTime);
     setIsRunning(false)
   }
 
@@ -136,6 +140,11 @@ function App() {
           </div>
         ))}
       </div>
+      {!isRunning && demoDuration > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <p>Total time elapsed: {demoDuration}ms</p>
+        </div>
+      )}
     </div>
   )
 }
