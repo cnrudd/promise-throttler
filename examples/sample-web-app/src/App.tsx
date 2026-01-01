@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import PromiseThrottler from 'promise-throttler'
 
-/**
- * Formats an epoch time in milliseconds to a string in HH:MM:SS.mmm format.
- * @param {number} epochMs - The epoch time in milliseconds.
- * @returns {string} The formatted time string.
- */
-function formatEpochToHourMinSecMs(epochMs) {
+interface RequestResult {
+  id: number;
+  status: number;
+  startTime: string;
+  endTime: number;
+  duration: number;
+}
+
+function formatEpochToHourMinSecMs(epochMs: number): string {
   const date = new Date(epochMs);
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -16,27 +19,28 @@ function formatEpochToHourMinSecMs(epochMs) {
 }
 
 function App() {
-  const [requests, setRequests] = useState([])
-  const [isRunning, setIsRunning] = useState(false)
-  const [requestCount, setRequestCount] = useState(6)
-  const [requestsPerSecond, setRequestsPerSecond] = useState(2)
-  const [runSequentially, setRunSequentially] = useState(false)
+  const [requests, setRequests] = useState<RequestResult[]>([])
+  const [isRunning, setIsRunning] = useState<boolean>(false)
+  const [requestCount, setRequestCount] = useState<number>(6)
+  const [requestsPerSecond, setRequestsPerSecond] = useState<number>(2)
+  const [runSequentially, setRunSequentially] = useState<boolean>(false)
 
-  const makeRequest = (id) => {
+  const makeRequest = (id: number): Promise<void> => {
     const startTime = Date.now();
     return fetch(`https://httpbin.org?count=${id}`)
       .then(response => {
-        const result = {
-        id,
-        status: response.status,
-        startTime: formatEpochToHourMinSecMs(startTime),
-        endTime: Date.now(),
-        duration: Date.now() - startTime
-      };
-      setRequests(prev => [...prev, result])});
+        const result: RequestResult = {
+          id,
+          status: response.status,
+          startTime: formatEpochToHourMinSecMs(startTime),
+          endTime: Date.now(),
+          duration: Date.now() - startTime
+        };
+        setRequests(prev => [...prev, result]);
+      });
   }
 
-  const runDemo = async () => {
+  const runDemo = async (): Promise<void> => {
     setIsRunning(true)
     setRequests([])
     
