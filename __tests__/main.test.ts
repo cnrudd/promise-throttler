@@ -167,4 +167,23 @@ describe('PromiseThrottler', () => {
       });
     });
   });
+
+  describe('requestsPerSecond < 1 handling in paralled execution', () => {
+    it('should handle requestsPerSecond < 1 in parallel execution', (done) => {
+      const pt = createPromiseThrottler(0.5, false);
+      let resolvedCount = 0;
+      
+      const fn = (): Promise<void> => {
+        resolvedCount++;
+        return Promise.resolve();
+      };
+      
+      pt.addAll([fn, fn]);
+      
+      setTimeout(() => {
+        expect(resolvedCount).toBe(1);
+        done();
+      }, 1500);
+    });
+  });
 });
