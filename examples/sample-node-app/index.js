@@ -1,4 +1,4 @@
-import PromiseThrottler from 'promise-throttler';
+import PromiseThrottler from '../../dist/main.js';
 import https from 'https';
 
 // Get requestsPerSecond from command line argument, default to 2

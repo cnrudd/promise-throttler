@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import PromiseThrottler from 'promise-throttler'
+import { useState } from 'react';
+import PromiseThrottler from '../../..';
 
-/**
- * Formats an epoch time in milliseconds to a string in HH:MM:SS.mmm format.
- * @param {number} epochMs - The epoch time in milliseconds.
- * @returns {string} The formatted time string.
- */
-function formatEpochToHourMinSecMs(epochMs) {
+interface RequestResult {
+  id: number;
+  status: number;
+  startTime: string;
+  endTime: number;
+  duration: number;
+}
+
+function formatEpochToHourMinSecMs(epochMs: number): string {
   const date = new Date(epochMs);
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -16,40 +19,49 @@ function formatEpochToHourMinSecMs(epochMs) {
 }
 
 function App() {
-  const [requests, setRequests] = useState([])
-  const [isRunning, setIsRunning] = useState(false)
-  const [requestCount, setRequestCount] = useState(6)
-  const [requestsPerSecond, setRequestsPerSecond] = useState(2)
+  const [requests, setRequests] = useState<RequestResult[]>([])
+  const [isRunning, setIsRunning] = useState<boolean>(false)
+  const [requestCount, setRequestCount] = useState<number>(20)
+  const [requestsPerSecond, setRequestsPerSecond] = useState<number>(5)
+  const [runSequentially, setRunSequentially] = useState<boolean>(false)
+  const [demoDuration, setDemoDuration] = useState<number>(0);
 
-  const makeRequest = (id) => {
+  const makeRequest = (id: number): Promise<void> => {
     const startTime = Date.now();
     return fetch(`https://httpbin.org?count=${id}`)
-      .then(response => ({
-        id,
-        status: response.status,
-        startTime: formatEpochToHourMinSecMs(startTime),
-        endTime: Date.now(),
-        duration: Date.now() - startTime
-      }))
+      .then(response => {
+        const result: RequestResult = {
+          id,
+          status: response.status,
+          startTime: formatEpochToHourMinSecMs(startTime),
+          endTime: Date.now(),
+          duration: Date.now() - startTime
+        };
+        setRequests(prev => [...prev, result]);
+      });
   }
 
-  const runDemo = async () => {
-    setIsRunning(true)
-    setRequests([])
+  const runDemo = async (): Promise<void> => {
+    setIsRunning(true);
+    setRequests([]);
+    const demoStartTime = Date.now();
     
-    const throttler = new PromiseThrottler({ requestsPerSecond })
-    const promises = Array.from({ length: requestCount }, (_, i) => 
-      throttler.add(() => makeRequest(i + 1))
-    )
-
-    for (const promise of promises) {
-      promise.then(result => {
-        setRequests(prev => [...prev, result])
-      })
+    const throttler = new PromiseThrottler({ requestsPerSecond, runSequentially });
+    
+    if (!runSequentially) {
+      const fns = Array.from({ length: requestCount }, (_, i) => () => makeRequest(i + 1));
+      await throttler.addAll(fns);
+    } else {
+      const promises = Array.from({ length: requestCount }, (_, i) => 
+        throttler.add(() => makeRequest(i + 1))
+      );
+      
+      await Promise.all(promises);
     }
-
-    await Promise.all(promises)
-    setIsRunning(false)
+    
+    const demoEndTime = Date.now();
+    setDemoDuration(demoEndTime - demoStartTime);
+    setIsRunning(false);
   }
 
   return (
@@ -81,6 +93,16 @@ function App() {
             step="0.1"
             disabled={isRunning}
             style={{ marginLeft: '8px', padding: '4px', width: '60px' }}
+          />
+        </label>
+        <label style={{ display: 'block', marginBottom: '8px' }}>
+          Run Sequentially:
+          <input 
+            type="checkbox" 
+            checked={runSequentially} 
+            onChange={(e) => setRunSequentially(e.target.checked)} 
+            disabled={isRunning}
+            style={{ marginLeft: '8px' }}
           />
         </label>
       </div>
@@ -118,6 +140,11 @@ function App() {
           </div>
         ))}
       </div>
+      {!isRunning && demoDuration > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <p>Total time elapsed: {demoDuration}ms</p>
+        </div>
+      )}
     </div>
   )
 }

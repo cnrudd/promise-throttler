@@ -20,6 +20,8 @@ const promiseThrottle = new PromiseThrottler({
 });
 
 // Example using add from a loop
+// Promises will be executed sequentially, since they 
+// are executed as soon as they are added.
 let amountOfPromises = 10;
 const initialCount = amountOfPromises;
 while (amountOfPromises-- > 0) {
@@ -30,12 +32,9 @@ while (amountOfPromises-- > 0) {
     });
 }
 
-// Example using Promise.all
-const one = promiseThrottle.add(() => myFunction(1));
-const two = promiseThrottle.add(() => myFunction(2));
-const three = promiseThrottle.add(() => myFunction(3));
-
-Promise.all([one, two, three])
+// Example using Promise.addAll
+const threeP = promiseThrottle.addAll([() => myFunction(1), () => myFunction(2), () => myFunction(3)]);
+threeP
   .then((r: number[]) => {
     console.log('Promises ' + r.join(', ') + ' done');
   });

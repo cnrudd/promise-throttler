@@ -10,8 +10,9 @@
       "request": "launch",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--experimental-vm-modules"],
       "args": ["--runInBand"],
-      "program": "${workspaceRoot}/node_modules/.bin/jest"
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js"
     },
     {
       "name": "TESTS: Promise throttle: Respects requestsPerSecond value",
@@ -19,8 +20,11 @@
       "request": "launch",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "args": ["--testNamePattern=respect-the-requestsPerSecond-option"],
-      "program": "${workspaceRoot}/node_modules/.bin/jest"
+      "runtimeArgs": ["--experimental-vm-modules"],
+      "args": [
+        "--testNamePattern=respect-the-requestsPerSecond-option"
+      ],
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js"
     }
     ]
 }
