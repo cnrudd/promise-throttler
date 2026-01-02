@@ -1,6 +1,6 @@
 {
   "name": "promise-throttler",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "sideEffects": false,
   "homepage": "https://github.com/cnrudd/promise-throttler",
@@ -8,6 +8,7 @@
   "main": "dist/main.min.js",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/main.min.js",
       "development": "./dist/main.js"
     }
