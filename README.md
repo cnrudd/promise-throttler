@@ -28,6 +28,7 @@ This library has no dependencies. If you are running this on Node.js, you can us
 Then, you add functions to the `PromiseThrottler` that, once called, return a `Promise`.
 
 ## API
+### Types
 ```javascript
 interface PromiseThrottlerOptions {
 
@@ -43,10 +44,9 @@ interface PromiseThrottlerOptions {
 
   /**
    * Whether the promises should be run sequentially or not. Defaults to false.
-   * If your `requestsPerSecond` limit is greater than 2, using parallel execution (`runSequentially: false`) 
+   * If your `requestsPerSecond` limit is greater than 2, using the default parallel execution (`runSequentially: false`) 
    * will usually result in faster total execution time.
    * If your `requestsPerSecond` limit is less than 1, ie: 0.3 or 1 promise every 3 seconds, this flag has no effect, promises are run sequentially.
-   * Similarly, if you use `add` to add promises one by one, they will be run sequentially.
    */
   runSequentially?: boolean;
 }
@@ -54,6 +54,22 @@ interface PromiseThrottlerOptions {
 const myAppsPromiseThrottle = new PromiseThrottler({
   requestsPerSecond: 5,    // up to 5 request per second
 });
+```
+
+### Public Methods
+```javascript
+    /**
+     * Adds a promise
+     * @param promise A function returning the promise to be added
+     * @returns A promise
+     */
+    PromiseThrottler.add<T>(promise: () => Promise<T>): Promise<T>;
+    /**
+     * Adds all the promises passed as parameters
+     * @param promises An array of functions that return a promise
+     * @returns A promise that resolves to an array of results
+     */
+    PromiseThrottler.addAll<T>(promises: (() => Promise<T>)[]): Promise<T[]>;
 ```
 
 ## Use
@@ -67,14 +83,12 @@ import PromiseThrottler from 'promise-throttler';
 
 /**
  * A function that once called returns a promise
- * @param {number} i An index number
- * @returns {Promise<number>} A promise that resolves to the given index number
  */
-const myFunction = function(i) {
-  return new Promise(function(resolve, reject) {
+const myFunction = (i: number): Promise<number> => {
+  return new Promise((resolve) => {
     // here we simulate that the promise runs some code
     // asynchronously
-    setTimeout(function() {
+    setTimeout(() => {
       console.log(i + ': ' + Math.random());
       resolve(i);
     }, 10);
@@ -86,25 +100,23 @@ const promiseThrottle = new PromiseThrottler({
   promiseImplementation: Promise  // the Promise library you are using
 });
 
-
 // Example using add from a loop
+// Promises will be executed sequentially, since they 
+// are executed as soon as they are added.
 let amountOfPromises = 10;
 const initialCount = amountOfPromises;
 while (amountOfPromises-- > 0) {
-  promiseThrottle.add(myFunction.bind(this, initialCount - amountOfPromises))
-    .then(function(i) {
+  const idx = initialCount - amountOfPromises;
+  promiseThrottle.add(() => myFunction(idx))
+    .then((i: number) => {
       console.log('Promise ' + i + ' done');
     });
 }
 
-
-// Example using Promise.all
-const one = promiseThrottle.add(myFunction.bind(this, 1));
-const two = promiseThrottle.add(myFunction.bind(this, 2));
-const three = promiseThrottle.add(myFunction.bind(this, 3));
-
-Promise.all([one, two, three])
-  .then(function(r) {
+// Example using Promise.addAll
+const threeP = promiseThrottle.addAll([() => myFunction(1), () => myFunction(2), () => myFunction(3)]);
+threeP
+  .then((r: number[]) => {
     console.log('Promises ' + r.join(', ') + ' done');
   });
 ```
@@ -130,3 +142,9 @@ MIT
 
 ## Top Alternatives on NPM
 * https://www.npmjs.com/search?page=0&q=keywords%3Apromise%20throttle&sortBy=score&perPage=20
+
+## Roadmap
+1. consolidate methods `add` and `addAll` into just one method that takes 1 promise, an array of promises, or multiple args that are promises or arrays of promises.
+2. provide a `quitEarly` method to kill execution and flush queue early.
+3. provide an option `ignoreErrors` to keep running the queue if a promise ends with a rejection.
+4. ensure promises in queue can be aborted
