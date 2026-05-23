@@ -6,13 +6,14 @@ Promise Throttler
 
 [![npm version](https://badge.fury.io/js/promise-throttler.svg?icon=si%3Anpm)](https://badge.fury.io/js/promise-throttler)
 [![npm downloads](https://badgen.net/npm/dm/promise-throttler)](https://www.npmjs.com/package/promise-throttler)
-[![Bundlephobia](https://badgen.net/bundlephobia/min/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
-[![Bundlephobia](https://badgen.net/bundlephobia/minzip/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
-[![Bundlephobia](https://badgen.net/bundlephobia/dependency-count/promise-throttler)](https://bundlephobia.com/result?p=promise-throttler)
 
-[![Bundlephobia](https://badgen.net/badge/icon/typescript?icon=typescript&label)]()
+[![gzip size](https://deno.bundlejs.com/badge?q=promise-throttler@2.0.1)](https://deno.bundlejs.com/badge?q=promise-throttler@2.0.1)
 
-[![Bundlephobia](https://badgen.net/npm/license/promise-throttler)]()
+[![dependencies](https://depx.co/api/badge/promise-throttler)](https://depx.co/pkg/promise-throttler)
+
+[![Uses typescript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://github.com/cnrudd/promise-throttler/tree/main/src)
+
+[![MIT License](https://badgen.net/npm/license/promise-throttler)](https://github.com/cnrudd/promise-throttler/blob/main/LICENSE)
 
 This is a small library adapted from JMPerez's (https://github.com/JMPerez/promise-throttle) to limit the amount of promises run per unit of time. It is useful for scenarios such as Rest APIs consumption, where we are normally rate-limited to a certain amount of requests per time.
 
